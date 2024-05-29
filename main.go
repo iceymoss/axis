@@ -6,9 +6,11 @@ import (
 )
 
 func main() {
-	serve := http.Server{
-		Addr:    "8080",
-		Handler: framework.NewCore(),
+	core := framework.NewCore()
+	registerRouter(core)
+	serve := &http.Server{
+		Addr:    ":8000",
+		Handler: core,
 	}
 	serve.ListenAndServe()
 }
