@@ -16,15 +16,10 @@ type Core struct {
 
 // NewCore 初始化对象Core
 func NewCore() *Core {
-	getRouter := map[string]ControllerHandler{}
-	postRouter := map[string]ControllerHandler{}
-	putRouter := map[string]ControllerHandler{}
-	deleteRouter := map[string]ControllerHandler{}
-	router := map[string]map[string]ControllerHandler{
-		"GET":    getRouter,
-		"POST":   postRouter,
-		"PUT":    putRouter,
-		"DELETE": deleteRouter,
+	methods := []string{"GET", "POST", "PUT", "DELETE"}
+	router := make(map[string]map[string]ControllerHandler)
+	for _, method := range methods {
+		router[method] = map[string]ControllerHandler{}
 	}
 	return &Core{router: router}
 }
@@ -72,17 +67,18 @@ func (c *Core) FindRouteByRequest(request *http.Request) ControllerHandler {
 	return nil
 }
 
-// 框架核心结构实现Handler接口
+// ServeHTTP 框架核心结构实现了Handler接口
 func (c *Core) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	log.Println("ServeHTTP")
 	ctx := NewContext(request, response)
-
-	//TODO：路由匹配算法
-	methodRouter := c.router["GET"]
-	if methodRouter == nil {
+	router := c.FindRouteByRequest(ctx.request)
+	if router == nil {
+		ctx.Json(404, "not found")
 		return
 	}
-	router := methodRouter[strings.ToUpper("foo")]
-	log.Println("core.router")
-	router(ctx)
+	err := router(ctx)
+	if err != nil {
+		ctx.Json(500, "inner error")
+		return
+	}
 }
