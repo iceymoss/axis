@@ -1,6 +1,9 @@
 package main
 
-import "github.com/iceymoss/axis/framework"
+import (
+	"github.com/iceymoss/axis/framework"
+	"time"
+)
 
 //func registerRouter(core *framework.Core) {
 //	// core.Get("foo", framework.TimeoutHandler(FooControllerHandler, time.Second*1))
@@ -11,7 +14,7 @@ import "github.com/iceymoss/axis/framework"
 // RegisterRouter 注册路由规则
 func RegisterRouter(core *framework.Core) {
 	// 需求1+2:HTTP方法+静态路由匹配
-	core.Get("/user/list", GetUserListController)
+	core.Get("/user/list", framework.TimeoutHandler(GetUserListController, 1*time.Second))
 
 	// 需求3:批量通用前缀
 	subjectApi := core.Group("/subject")
