@@ -60,6 +60,10 @@ func (c *Core) Delete(url string, handler ControllerHandler) {
 	}
 }
 
+func (c *Core) Group(prefix string) IGroup {
+	return NewGroup(c, prefix)
+}
+
 // FindRouteByRequest 匹配路由，如果没有匹配到，返回nil
 func (c *Core) FindRouteByRequest(request *http.Request) ControllerHandler {
 	// uri 和 method 全部转换为大写，保证大小写不敏感

@@ -7,7 +7,7 @@ import (
 
 func main() {
 	core := framework.NewCore()
-	registerRouter(core)
+	RegisterRouter(core)
 	serve := &http.Server{
 		Addr:    ":8000",
 		Handler: core,

@@ -44,3 +44,26 @@ func FooControllerHandler(c *framework.Context) error {
 	}
 	return nil
 }
+
+func GetUserListController(ctx *framework.Context) error {
+	ctx.Json(200, map[string]interface{}{
+		"code":  200,
+		"error": nil,
+		"msg":   "成功",
+		"data": []map[string]string{
+			{"name": "iceymoss", "age": "18"},
+			{"name": "kos", "age": "20"},
+		},
+	})
+	return nil
+}
+
+func SubjectDelController(ctx *framework.Context) error {
+	ctx.Json(200, map[string]interface{}{
+		"code":  200,
+		"error": nil,
+		"msg":   "成功",
+		"data":  "hello",
+	})
+	return nil
+}

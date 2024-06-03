@@ -10,13 +10,15 @@ type IGroup interface {
 
 // Group 前缀匹配的具体实现者
 type Group struct {
-	core   *Core
-	prefix string
+	core   *Core  // 指向core结构
+	parent *Group //指向上一个Group，如果有的话
+	prefix string // 这个group的通用前缀
 }
 
-func NewGroup(prefix string) *Group {
+func NewGroup(core *Core, prefix string) *Group {
 	return &Group{
-		core:   NewCore(),
+		core:   core,
+		parent: nil,
 		prefix: prefix,
 	}
 }
