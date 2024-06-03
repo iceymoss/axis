@@ -24,6 +24,12 @@ type Context struct {
 
 	// 写保护机制
 	writerMux *sync.Mutex
+
+	// 当前请求的handler链条
+	handlers []ControllerHandler
+
+	// 当前请求调用到调用链的哪个节点
+	index int
 }
 
 func NewContext(r *http.Request, w http.ResponseWriter) *Context {
@@ -32,6 +38,7 @@ func NewContext(r *http.Request, w http.ResponseWriter) *Context {
 		responseWriter: w,
 		ctx:            r.Context(),
 		writerMux:      &sync.Mutex{},
+		index:          -1,
 	}
 }
 
@@ -47,6 +54,11 @@ func (ctx *Context) GetRequest() *http.Request {
 
 func (ctx *Context) SetHasTimeout() {
 	ctx.hasTimeout = true
+}
+
+// SetHandlers 将涉及到的中间件和控制器加入ctx中
+func (ctx *Context) SetHandlers(handlers []ControllerHandler) {
+	ctx.handlers = handlers
 }
 
 func (ctx *Context) HasTimeout() bool {
@@ -205,5 +217,16 @@ func (ctx *Context) HTML(status int, obj interface{}, template string) error {
 }
 
 func (ctx *Context) Text(status int, obj string) error {
+	return nil
+}
+
+// Next 执行handlers的下一个方法(中间件+控制器), 通过移动index控制请求调用链
+func (ctx *Context) Next() error {
+	ctx.index++
+	if ctx.index < len(ctx.handlers) {
+		if err := ctx.handlers[ctx.index](ctx); err != nil {
+			return err
+		}
+	}
 	return nil
 }
