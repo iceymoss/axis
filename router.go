@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/iceymoss/axis/framework"
+	"github.com/iceymoss/axis/framework/middleware"
 	"time"
 )
 
@@ -24,5 +25,18 @@ func RegisterRouter(core *framework.Core) {
 		subjectApi.Put("/:id", SubjectDelController)
 		subjectApi.Get("/:id", SubjectDelController)
 		subjectApi.Get("/list/all", SubjectDelController)
+	}
+}
+
+// 注册路由规则
+func registerRouter(core *framework.Core) {
+	// 在core中使用middleware.Test3() 为单个路由增加中间件
+	core.Get("/user/list", middleware.Test3(), GetUserListController)
+
+	// 批量通用前缀
+	subjectApi := core.Group("/subject")
+	{
+		// 在group中使用middleware.Test3() 为单个路由增加中间件
+		subjectApi.Get("/:id", middleware.Test3(), SubjectDelController)
 	}
 }

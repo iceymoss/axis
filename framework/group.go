@@ -2,10 +2,12 @@ package framework
 
 // IGroup 代表前缀分组
 type IGroup interface {
-	Get(string, ControllerHandler)
-	Post(string, ControllerHandler)
-	Put(string, ControllerHandler)
-	Delete(string, ControllerHandler)
+	Get(string, ...ControllerHandler)
+	Post(string, ...ControllerHandler)
+	Put(string, ...ControllerHandler)
+	Delete(string, ...ControllerHandler)
+	Use(middlewares ...ControllerHandler)
+	Group(uri string) IGroup
 }
 
 // Group 前缀匹配的具体实现者
@@ -29,22 +31,40 @@ func (g *Group) Use(middlewares ...ControllerHandler) {
 	g.middlewares = append(g.middlewares, middlewares...)
 }
 
-func (g *Group) Get(uri string, handler ControllerHandler) {
-	uri = g.prefix + uri
-	g.core.Get(uri, handler)
+// 获取某个group的middleware
+// 这里就是获取除了Get/Post/Put/Delete之外设置的middleware
+func (g *Group) getMiddlewares() []ControllerHandler {
+	if g.parent == nil {
+		return g.middlewares
+	}
+
+	return append(g.parent.getMiddlewares(), g.middlewares...)
 }
 
-func (g *Group) Post(uri string, handler ControllerHandler) {
+func (g *Group) Get(uri string, handlers ...ControllerHandler) {
 	uri = g.prefix + uri
-	g.core.Post(uri, handler)
+	allHandlers := append(g.getMiddlewares(), handlers...)
+	g.core.Get(uri, allHandlers...)
 }
 
-func (g *Group) Put(uri string, handler ControllerHandler) {
+func (g *Group) Post(uri string, handlers ...ControllerHandler) {
 	uri = g.prefix + uri
-	g.core.Put(uri, handler)
+	g.core.Post(uri, handlers...)
 }
 
-func (g *Group) Delete(uri string, handler ControllerHandler) {
+func (g *Group) Put(uri string, handlers ...ControllerHandler) {
 	uri = g.prefix + uri
-	g.core.Delete(uri, handler)
+	g.core.Put(uri, handlers...)
+}
+
+func (g *Group) Delete(uri string, handler ...ControllerHandler) {
+	uri = g.prefix + uri
+	g.core.Delete(uri, handler...)
+}
+
+// Group 实现 Group 方法
+func (g *Group) Group(uri string) IGroup {
+	cgroup := NewGroup(g.core, uri)
+	cgroup.parent = g
+	return cgroup
 }

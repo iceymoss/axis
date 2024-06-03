@@ -39,7 +39,8 @@ func (c *Core) Use(middlewares ...ControllerHandler) {
 func (c *Core) Get(url string, handlers ...ControllerHandler) {
 	//大小写不敏感，增加用户容错
 	upperUrl := strings.ToUpper(url)
-	if err := c.router["GET"].AddRouter(upperUrl, handlers); err != nil {
+	allHandlers := append(c.middlewares, handlers...)
+	if err := c.router["GET"].AddRouter(upperUrl, allHandlers); err != nil {
 		log.Fatal("add router error: ", err)
 	}
 }
