@@ -14,7 +14,7 @@ type Core struct {
 	//router map[string]map[string]ControllerHandler
 
 	// 前缀树路由匹配
-	router map[string]*Tree // all routers
+	router map[string]*Tree // all routers  GET => 一个前缀树结构
 
 	// 从core这边设置的中间件
 	middlewares []ControllerHandler
