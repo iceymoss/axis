@@ -30,6 +30,8 @@ type Context struct {
 
 	// 当前请求调用到调用链的哪个节点
 	index int
+
+	params map[string]string // url路由匹配的参数
 }
 
 func NewContext(r *http.Request, w http.ResponseWriter) *Context {
@@ -141,7 +143,7 @@ func (ctx *Context) QueryAllTest() map[string][]string {
 	return map[string][]string{}
 }
 
-func (ctx *Context) FormInt(key string, def int) int {
+func (ctx *Context) FormIntTest(key string, def int) int {
 	params := ctx.FormAll()
 	if values, ok := params[key]; ok {
 		length := len(values)
@@ -156,7 +158,7 @@ func (ctx *Context) FormInt(key string, def int) int {
 	return def
 }
 
-func (ctx *Context) FormString(key string, def string) string {
+func (ctx *Context) FormStringTest(key string, def string) string {
 	params := ctx.FormAll()
 	if values, ok := params[key]; ok {
 		length := len(values)
@@ -168,14 +170,14 @@ func (ctx *Context) FormString(key string, def string) string {
 }
 
 // FormAll 提取所有表单参数
-func (ctx *Context) FormAll() map[string][]string {
+func (ctx *Context) FormAllTest() map[string][]string {
 	if ctx.request != nil {
 		return map[string][]string(ctx.request.PostForm)
 	}
 	return map[string][]string{}
 }
 
-func (ctx *Context) BindJson(obj interface{}) error {
+func (ctx *Context) BindJsonTest(obj interface{}) error {
 	if ctx.request != nil {
 		body, err := ioutil.ReadAll(ctx.request.Body)
 		if err != nil {
@@ -229,4 +231,8 @@ func (ctx *Context) Next() error {
 		}
 	}
 	return nil
+}
+
+func (ctx *Context) SetParams(params map[string]string) {
+	ctx.params = params
 }

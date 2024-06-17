@@ -102,6 +102,9 @@ func (c *Core) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
+	// 设置路由参数
+	params := node.parseParamsFromEndNode(request.URL.Path)
+	ctx.SetParams(params)
 	ctx.SetHandlers(handlers)
 
 	// 调用路由函数，如果返回err 代表存在内部错误，返回500状态码
