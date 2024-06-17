@@ -94,7 +94,7 @@ func (ctx *Context) Done() <-chan struct{} {
 // #endregion 获取参数
 
 // QueryInt 获取query指定key的int值
-func (ctx *Context) QueryInt(key string, def int) int {
+func (ctx *Context) QueryIntTest(key string, def int) int {
 	params := ctx.QueryAll()
 	if values, ok := params[key]; ok {
 		length := len(values)
@@ -119,7 +119,7 @@ func (ctx *Context) QueryArray(key string, def []string) []string {
 }
 
 // QueryString 获取query指定key的string值
-func (ctx *Context) QueryString(key string, def string) string {
+func (ctx *Context) QueryStringTest(key string, def string) string {
 	params := ctx.QueryAll()
 	if values, ok := params[key]; ok {
 		length := len(values)
@@ -133,7 +133,7 @@ func (ctx *Context) QueryString(key string, def string) string {
 // QueryAll 提取所有query参数
 // map[string][]string: http://example.com/search?tag=science&tag=technology&tag=math
 // result：map["tag"][]string{"science", "technology", "math"}
-func (ctx *Context) QueryAll() map[string][]string {
+func (ctx *Context) QueryAllTest() map[string][]string {
 	if ctx.request != nil {
 		//使用Query()方法解析URL中的查询字符串
 		return map[string][]string(ctx.request.URL.Query())
