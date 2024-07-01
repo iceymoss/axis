@@ -199,7 +199,7 @@ func (ctx *Context) BindJsonTest(obj interface{}) error {
 
 // response
 
-func (ctx *Context) Json(status int, obj interface{}) error {
+func (ctx *Context) JsonTest(status int, obj interface{}) error {
 	if ctx.HasTimeout() {
 		return nil
 	}
@@ -218,7 +218,7 @@ func (ctx *Context) HTML(status int, obj interface{}, template string) error {
 	return nil
 }
 
-func (ctx *Context) Text(status int, obj string) error {
+func (ctx *Context) TextTest(status int, obj string) error {
 	return nil
 }
 
