@@ -24,7 +24,7 @@ func FooControllerHandler(c *framework.Context) error {
 		}()
 		// Do real action
 		time.Sleep(10 * time.Second)
-		c.Json(200, "ok")
+		c.Json("ok")
 
 		finish <- struct{}{}
 	}()
@@ -33,20 +33,20 @@ func FooControllerHandler(c *framework.Context) error {
 		c.WriterMux().Lock()
 		defer c.WriterMux().Unlock()
 		log.Println(p)
-		c.Json(500, "panic")
+		c.Json("panic")
 	case <-finish:
 		fmt.Println("finish")
 	case <-durationCtx.Done():
 		c.WriterMux().Lock()
 		defer c.WriterMux().Unlock()
-		c.Json(500, "time out")
+		c.Json("time out")
 		c.SetHasTimeout()
 	}
 	return nil
 }
 
 func GetUserListController(ctx *framework.Context) error {
-	ctx.Json(200, map[string]interface{}{
+	ctx.Json(map[string]interface{}{
 		"code":  200,
 		"error": nil,
 		"msg":   "成功",
@@ -59,11 +59,20 @@ func GetUserListController(ctx *framework.Context) error {
 }
 
 func SubjectDelController(ctx *framework.Context) error {
-	ctx.Json(200, map[string]interface{}{
+	ctx.Json(map[string]interface{}{
 		"code":  200,
 		"error": nil,
 		"msg":   "成功",
 		"data":  "hello",
 	})
+	return nil
+}
+
+func UserLoginController(c *framework.Context) error {
+	foo, _ := c.QueryString("foo", "def")
+	// 等待10s才结束执行
+	time.Sleep(10 * time.Second)
+	// 输出结果
+	c.SetOkStatus().Json("ok, UserLoginController: " + foo)
 	return nil
 }

@@ -16,7 +16,7 @@ import (
 func RegisterRouter(core *framework.Core) {
 	// 需求1+2:HTTP方法+静态路由匹配
 	core.Get("/user/list", framework.TimeoutHandler(GetUserListController, 1*time.Second))
-
+	core.Get("/user/test", UserLoginController)
 	// 需求3:批量通用前缀
 	subjectApi := core.Group("/subject")
 	{
@@ -32,7 +32,7 @@ func RegisterRouter(core *framework.Core) {
 func registerRouter(core *framework.Core) {
 	// 在core中使用middleware.Test3() 为单个路由增加中间件
 	core.Get("/user/list", middleware.Test3(), GetUserListController)
-
+	core.Get("/user/test", UserLoginController)
 	// 批量通用前缀
 	subjectApi := core.Group("/subject")
 	{

@@ -40,7 +40,7 @@ func TimeoutHandler(function ControllerHandler, d time.Duration) ControllerHandl
 		case <-durationCtx.Done(): //超时
 			c.WriterMux().Lock()
 			defer c.WriterMux().Unlock()
-			c.Json(500, "time out")
+			c.Json("time out")
 			c.SetHasTimeout()
 		}
 		return nil
