@@ -11,7 +11,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/gin-gonic/gin/internal/bytesconv"
+	"github.com/iceymoss/axis/framework/gin/internal/bytesconv"
 )
 
 var (
